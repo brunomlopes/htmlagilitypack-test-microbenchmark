@@ -11,3 +11,10 @@ Benchmark                             Mean Mean-Error   Sdev  Unit
 TestIteration                        4,469      1,406  0,930 ms/op
 TestPath                             3,818      0,372  0,246 ms/op
 </pre>
+
+# How to repro
+
+<pre>
+scriptcs -install
+scriptcs .\test.csx
+</pre>
