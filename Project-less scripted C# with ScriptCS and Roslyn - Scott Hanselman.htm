@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Project-less scripted C# with ScriptCS and Roslyn - Scott Hanselman</title>
+ 	<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+	<meta name="title" content="Project-less scripted C# with ScriptCS and Roslyn - Scott Hanselman" />
+	<meta name="author" content="Scott Hanselman" />
+	<meta name="copyright" content="Scott Hanselman" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="Scott, Computer, Zen, .NET, C#, Hanselman, Microsoft, Scott, Weblog, Diabetes, Portland, Zimbabwe, ASP.NET, Azure, Cloud, Productivity, Hanselman" name="keywords" />
+	<meta name="description" content="Scott Hanselman on Programming, The Web, Open Source, .NET, The Cloud and More" />
+	<link rel="meta" type="application/rdf+xml" title="FOAF" href="/blog/foaf.rdf" />
+		
+	<link rel="stylesheet" type="text/css" href="/blog/themes/jinyang/css/supportingstyles.v1.min.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/css/style.css?v=8" media="screen" >
+  <link rel="stylesheet" type="text/css" href="/blog/themes/jinyang/css/print.v1.min.css" media="print" />
+
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>    
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>   
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic' rel='stylesheet' type='text/css'>
+		 
+	<!--[if IE]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->  
+  <meta name="application-name" content="Scott Hanselman's Blog"/>
+  <meta name="msapplication-config" content="/browserconfig.xml" />
+  <link rel="shortcut icon" href="/images/favicon.ico">
+	<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/images/apple-touch-icon-114x114.png">
+	<link rel="icon" href="/images/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="Scott Hanselman's Blog" href="http://feeds.hanselman.com/ScottHanselman" />
+	<link rel="me" type="text/html" href="https://plus.google.com/108573066018819777334?rel=me"/> 
+	<link rel="me" type="text/html" href="http://feeds.hanselman.com/ScottHanselman"/> 
+	<link rel="me" type="text/html" href="https://twitter.com/shanselman"/> 
+	<link rel="me" type="text/html" href="https://facebook.com/scott.hanselman"/> 
+	<meta name="t_omni_extblogid" content="msstoextblogs1" />
+	<meta name="t_omni_blogname" content="Scott Hanselman" />
+	<link rel="search" type="application/opensearchdescription+xml" href="/blog/opensearch.xml" title="Hanselman Search">
+	<meta name="msapplication-starturl" content="./" />
+  <meta name="msapplication-TileImage" content="/blog/images/hanselman-144.png" />
+ <script src="//ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.min.js"></script>
+<script>
+  (window.jQuery || document.write('<script src="/blog/scripts/jquery.1.4.min.js"><\/script>'));
+</script>
+ <script src="/blog/themes/JinYang/scripts/header.v1.min.js"></script>
+    
+<base href="http://www.hanselman.com/blog/"></base>
+<link rel="alternate" type="application/rss+xml" title="Scott Hanselman" href="http://www.hanselman.com/blog/SyndicationService.asmx/GetRss" />
+<link rel="alternate" type="application/atom+xml" title="Scott Hanselman" href="http://www.hanselman.com/blog/SyndicationService.asmx/GetAtom" />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.hanselman.com/blog/EditService.asmx/GetRsd" /><link rel="microsummary" type="application/x.microsummary+xml" href="http://www.hanselman.com/blog/Microsummary.ashx" />
+<link rel="canonical" href="http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx" />
+<meta name="description" content="Glenn Block is working on something interesting that combines C#, NuGet, Roslyn (the new 'compiler as a service') and his love of text editors and scripts. ..." />
+<meta name="keywords" content="NuGet,NuGetPOW,Open Source,VS2012" />
+<meta name="twitter:card" content="summary" />
+ <meta name="twitter:site" content="@shanselman" />
+<meta name="twitter:creator" content="@shanselman" />
+<meta name="twitter:title" content="Project-less scripted C# with ScriptCS and Roslyn" />
+<meta name="twitter:description" content="Glenn Block is working on something interesting that combines C#, NuGet, Roslyn (the new 'compiler as a service') and ..." />
+<meta name="twitter:image" content="http://www.hanselman.com/blog/content/binary/Windows-Live-Writer/NuGet-Package-of-the-Week-14---ScriptCS_C1A6/image_3.png" />
+<meta name="og:url" content="http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx" />
+<meta name="og:title" content="Project-less scripted C# with ScriptCS and Roslyn" />
+<meta name="og:image" content="http://www.hanselman.com/blog/content/binary/Windows-Live-Writer/NuGet-Package-of-the-Week-14---ScriptCS_C1A6/image_3.png" />
+<meta name="og:description" content="Glenn Block is working on something interesting that combines C#, NuGet, Roslyn (the new 'compiler as a service') and ..." />
+<meta name="og:type" content="blog" />
+<meta name="fb:admins" content="552706617" />
+<meta name="fb:app_id" content="552706617" />
+<script type="application/ld+json"> 
+{
+"@context": "http://schema.org","@type": "BlogPosting","headline": "Project-less scripted C# with ScriptCS and Roslyn","datePublished": "2013-04-24","description": "Glenn Block is working on something interesting that combines C#, NuGet, Roslyn (the new 'compiler as a service') and his love of text editors and scripts. ... ...","url": "http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx","image": "http://www.hanselman.com/blog/content/binary/Windows-Live-Writer/NuGet-Package-of-the-Week-14---ScriptCS_C1A6/image_3.png"}
+</script>
+</head>
+
+<body class="line-darkbrown"><form method="post" action="/blog/CommentView.aspx?title=ProjectlessScriptedCWithScriptCSAndRoslyn" id="mainForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTM2MTcxNzAwMA9kFgJmD2QWAgIFD2QWAgIDD2QWAmYPDxYCHgdlbnRyeUlkBSQ0ZWYwOTgxYy1iODM2LTRiNGUtYjdlZC05NWY0MTE4Y2NjYjZkFgJmD2QWCAIBDxYCHgdWaXNpYmxlZxYCAgEPDxYCHgRUZXh0BRRDb21tZW50cyBhcmUgY2xvc2VkLmRkAgIPFgIfAWgWAgIBDw8WAh8CBUtBbGwgY29tbWVudHMgcmVxdWlyZSB0aGUgYXBwcm92YWwgb2YgdGhlIHNpdGUgb3duZXIgYmVmb3JlIGJlaW5nIGRpc3BsYXllZC5kZAIDDxYCHwFoFgJmD2QWAmYPZBYEAgEPDxYCHwIFBk9wZW5JRGRkAgMPDxYEHhJFbmFibGVDbGllbnRTY3JpcHRoHgxFcnJvck1lc3NhZ2UFOVBsZWFzZSBlbnRlciB5b3VyIE9wZW5JZCBvciB5b3VyIE5hbWUsIEVtYWlsIGFuZCBXZWJwYWdlLmRkAgQPFgIfAWgWEGYPZBYCZg9kFgQCAQ8PFgIfAgUETmFtZWRkAgMPDxYCHwQFMVlvdSBtdXN0IGVudGVyIHlvdXIgbmFtZSAtIG9yIGF0IGxlYXN0IHNvbWUgbmFtZS5kZAIBD2QWBGYPZBYEAgEPDxYCHwIFBkUtbWFpbGRkAgMPDxYEHwNoHwQFSlRoZSBlLW1haWwgYWRkcmVzcyBpcyBvcHRpb25hbCwgYnV0IGlmIHlvdSBwcm92aWRlIGl0LCBpdCBzaG91bGQgYmUgdmFsaWQuZGQCAQ9kFgICAw9kFgICAQ8PFgIfAgVUKHdpbGwgc2hvdyB5b3VyIDxhIGhyZWY9Imh0dHA6Ly93d3cuZ3JhdmF0YXIuY29tIiB0YXJnZXQ9Il9ibGFuayI+Z3JhdmF0YXI8L2E+IGljb24pZGQCAg9kFgJmD2QWAgIBDw8WAh8CBQlIb21lIHBhZ2VkZAIDD2QWAmYPZBYCAgEPEA8WAh8CBQtSZW1lbWJlciBNZWRkZGQCBA9kFgJmD2QWBgIBDw8WAh4HRW5hYmxlZGhkZAICDw8WAh8EBRtQbGVhc2UgZW50ZXIgdGhlIGNvZGUgc2hvd25kZAIDDw8WBB8DaB8EBR5FbXB0eSBjb21tZW50cyBhcmVuJ3QgYWxsb3dlZC5kZAIFD2QWAmYPZBYEAgEPDxYEHwIFGkNvbW1lbnQgKEhUTUwgbm90IGFsbG93ZWQpHwFoZGQCAw8PFgIfAgX7AUNvbW1lbnQgKFNvbWUgaHRtbCBpcyBhbGxvd2VkOiA8Y29kZT5hQGhyZWZAdGl0bGUsIGIsIGJsb2NrcXVvdGVAY2l0ZSwgZW0sIGksIGxpLCBvbCwgcHJlLCBzdHJpa2UsIHN0cm9uZywgc3ViLCBzdXBlciwgdSwgdWw8L2NvZGU+KSB3aGVyZSB0aGUgQCBtZWFucyAiYXR0cmlidXRlLiIgRm9yIGV4YW1wbGUsIHlvdSBjYW4gdXNlICZsdDthIGhyZWY9IiIgdGl0bGU9IiImZ3Q7IG9yICZsdDtibG9ja3F1b3RlIGNpdGU9IlNjb3R0IiZndDsuZGQCBg9kFgJmD2QWAgIBDw8WAh8CBRRMaXZlIENvbW1lbnQgUHJldmlld2RkAggPZBYCZg9kFgICBw8PFgIfAgUMU2F2ZSBDb21tZW50ZGRkcCR+D9h9FR5pgmVTmpJoYjdSNhU=" />
+</div>
+
+
+				<script type="text/javascript">
+					var allowedHtmlTags = ['a', 'b', 'blockquote', 'em', 'i', 'li', 'ol', 'pre', 'strike', 'strong', 'sub', 'super', 'u', 'ul'];
+				</script>
+				<script type="text/javascript" src="scripts/LiveCommentPreview.js" defer="defer"></script><script type="text/javascript" language="JavaScript">
+<!--
+function showReferral()
+{
+var elems = document.getElementsByTagName('*');
+var count = 0;
+for (var i=0;i<elems.length;i++) {
+    if ( elems[i].id.indexOf('referralSpanHidden') != -1 ) {
+        elems[i].style.display='inline';
+        count++;
+    }
+    else if ( elems[i].id.indexOf('referralMore') != -1 ) {
+        elems[i].style.display='none';
+        count++;
+    }
+    if (count == 2) {break;}
+}
+}
+// --></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="6BAEE71B" />
+</div>
+<section class="containerOuter line-tan" id="topbar">
+	<section class="containerInner">
+    	<h1><a href="/">Scott Hanselman</a></h1>
+        <nav>
+        	<ul>
+            	<li><a href="//hanselman.com/about">about</a></li>
+            	<li><a href="//hanselman.com/blog" class="current">blog</a></li>
+            	<li><a href="//hanselman.com/speaking">speaking</a></li>
+            	<li><a href="//hanselman.com/podcasts">podcasts</a></li>
+            	<li><a href="//hanselman.com/books">books</a></li>  
+          </ul>
+        </nav>        
+    </section>
+</section>
+
+<section class="containerOuter darkbrown searchBar">
+	<section class="containerInner">
+       <div class="searchBarNav">
+              <div id="search">
+                  <input id="searchString" placeholder="Learn to Tweet, Be a Better Developer, etc." onkeypress="if (event.keyCode == 13) {doSearch(searchString.value);return false;}" type="text">
+                  <input id="searchButton" name="googleSearchName" type="button"  value="Search" language="javascript" onclick="doSearch(searchString.value);return false;">
+              </div>
+              <div id="archives">
+                browse by <a title="The complete archive of Scott's Blog" href="//www.hanselman.com/blog/archives.aspx">category</a> or <a title="Scott's blog posts in a friendly calendar format" href="//www.hanselman.com/blog/monthview.aspx">date</a>
+              </div>
+      </div>
+    </section>
+</section>
+
+
+
+<main>
+<div id="ctl01_content" class="bodyContentStyle">
+    <!-- BEGIN ID SELECTOR -->
+
+    <script type="text/javascript">
+       idselector_input_id = 'ctl01_openid_identifier';
+    </script>
+
+    <script type="text/javascript" id="__openidselector" src="http://www.hanselman.com/blog/openidselector/openidselector.js" charset="utf-8"></script>
+
+    <!-- END ID SELECTOR -->
+    <div id="ctl01_commentViewContent">
+    <a name="a4ef0981c-b836-4b4e-b7ed-95f4118cccb6"></a><article>
+<section class="containerOuter blogHeader line-chocolate" >
+	<section class="containerInnerNarrow">
+    	<h2 class="blogTitle"><a class="TitleLinkStyle" rel="bookmark" href="http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx">Project-less scripted C# with ScriptCS and Roslyn</a></h2>
+    </section>
+</section>
+
+<section class="containerOuter burntSienna blogMetaInfo">
+	<section class="containerInnerNarrow">
+		<span class="blogMetaDate">April 24, '13</span>
+		<a class="commentLinkStyle" href="http://www.hanselman.com/blog/CommentView.aspx?guid=4ef0981c-b836-4b4e-b7ed-95f4118cccb6#commentstart">Comments [31]</a>
+    <span class="blogMetaCategories">Posted in <a class="categoryLinkStyle" href="http://www.hanselman.com/blog/CategoryView.aspx?category=NuGet">NuGet</a>&nbsp;|&nbsp;<a class="categoryLinkStyle" href="http://www.hanselman.com/blog/CategoryView.aspx?category=NuGetPOW">NuGetPOW</a>&nbsp;|&nbsp;<a class="categoryLinkStyle" href="http://www.hanselman.com/blog/CategoryView.aspx?category=Open+Source">Open Source</a>&nbsp;|&nbsp;<a class="categoryLinkStyle" href="http://www.hanselman.com/blog/CategoryView.aspx?category=VS2012">VS2012</a></span>    
+    </section>
+</section>
+<section class="containerOuter blogBodyContainer">
+	<section class="containerInner blogBody">
+          <div class="ad-item ad-sponsoreditem">
+              Sponsored By<br />
+                  <div id="lqdmad">
+                   <!-- <div data-type="ad" class="lqm_ad" data-publisher="lqm.scotthanselman.site" data-zone="ron" data-format="125x125" data-tags="Mobile%2CHTML5%2CCSS%2CWeb%2CJavascript%2CAgile%2CCloud%2CHosting%2Cvs%2CASP.NET%2CWP7%2CWPF%2CXML%2CParallelism%2CEntity%20Framework%2CjQuery%2CMVC%2CAJAX"></div> -->
+                    <div class="lqm_ad" data-type="ad" data-publisher="lqm.scotthanselman.site" data-zone="ron" data-format="160x600" data-tags="Mobile%2CHTML5%2CCSS%2CWeb%2CJavascript%2CAgile%2CCloud%2CHosting%2Cvs%2CASP.NET%2CWP7%2CWPF%2CXML%2CParallelism%2CEntity%20Framework%2CjQuery%2CMVC%2CAJAX"></div>
+
+                  </div>
+         </div>
+		<figure><img title="ScriptCS inside of SublimeText2 with the ScriptCS package giving SyntaxHighlighting" style="display: inline" alt="ScriptCS inside of SublimeText2 with the ScriptCS package giving SyntaxHighlighting" src="http://www.hanselman.com/blog/content/binary/Windows-Live-Writer/NuGet-Package-of-the-Week-14---ScriptCS_C1A6/image_3.png" width="1054" height="592" /></figure>   <p><a href="http://codebetter.com/glennblock/2013/02/28/scriptcs-living-on-the-edge-in-c-without-a-project-on-the-wings-of-roslyn-and-nuget/">Glenn Block</a> is working on something interesting that combines C#, NuGet, Roslyn (the new &quot;compiler as a service&quot;) and his love of text editors and scripts. Now, with help from Justin Rusbatch (<a href="https://twitter.com/jrusbatch">@jrusbatch</a>) and Filip Wojcieszyn (<a href="https://twitter.com/filip_woj">@filip_woj</a>) they are having all kinds of fun...using C# as a scripting language.</p>  <p>Every few years someone tries to turn C# into a competent scripting world, myself included. Often this has included batch files and MacGyver magic, file associations and hacks. Clearly the .NET community wants something like this, but we are collectively still trying to figure out what it should look like. PowerShell aficionados - and I count myself amongst them - might look at such efforts as a threat or a pale reinvention of PowerShell, but the fact remains that C# at the command line, be it as a script or a <a href="http://visualstudiogallery.msdn.microsoft.com/295fa0f6-37d1-49a3-b51d-ea4741905dc2">REPL</a>, is an attractive concept.</p>  <p>Simply put by example, ScriptCS lets me do this:</p>  <pre>C:\temp&gt;copy con hello.csx<br />Console.WriteLine(&quot;Pants&quot;);<br />^Z<br />        1 file(s) copied.<br /><br />C:\temp&gt;scriptcs hello.csx<br />Pants</pre>
+
+<p>That's Hello World. There's no namespace, no class, just some C# in a .csx file. Roslyn takes care of the compilation and the resulting code and .exe never hits the disk.</p>
+
+<h3>Self-hosting Web APIs</h3>
+
+<p>So that's interesting, but what about bootstrapping a web server using <a href="http://nancyfx.org/">NancyFX</a> to host a Web API?</p>
+
+<p>Go and <a href="https://github.com/scriptcs/scriptcs-samples.git">clone this repo</a>:</p>
+
+<pre>git clone https://github.com/scriptcs/scriptcs-samples.git</pre>
+
+<p>Look in the Nancy folder. There's a packages.config. Just like a node.js application has a packages.json file with the dependencies in has, a .NET app usually has a packages.config with the name. In node, you type npm install to restore those packages from the main repository. Here I'll type scriptcs -install...</p>
+
+<pre>C:\temp\scriptcs-samples\nancy&gt;scriptcs -install<br />Installing packages...<br />Installed: Nancy.Hosting.Self 0.16.1.0<br />Installed: Nancy.Bootstrappers.Autofac 0.16.1.0<br />Installed: Autofac 2.6.3.862<br />Installation successful.</pre>
+
+<p>Now, running start.csx fires up an instance of Nancy listening on localhost:1234. There's no IIS, no ASP.NET. </p>
+
+<pre>C:\temp\scriptcs-samples\nancy&gt;scriptcs start.csx<br />Found assembly reference: Autofac.Configuration.dll<br />Found assembly reference: Autofac.dll<br />Found assembly reference: Nancy.Bootstrappers.Autofac.dll<br />Found assembly reference: Nancy.dll<br />Found assembly reference: Nancy.Hosting.Self.dll<br />Nancy is running at http://localhost:1234/<br />Press any key to end</pre>
+
+<p>There is also the notion of a &quot;ScriptPack&quot; such that you can Require&lt;T&gt; a library and hide a lot of the bootstrapping and complexity. For example, I could start up WebAPI after installing a Web API package that includes some starter code. Note this is all from the command line. I'm using &quot;copy con file&quot; to get started.</p>
+
+<pre>C:\temp\foo&gt;scriptcs -install ScriptCs.WebApi<br />Installing packages...<br />Installed: ScriptCs.WebApi<br />Installation completed successfully.<br />...snip...<br />Added ScriptCs.WebApi, Version 0.1.0, .NET 4.5<br />Packages.config successfully created!<br /><br />C:\temp\foo&gt;copy con start.csx<br />public class TestController : ApiController {<br />  public string Get() {<br />    return &quot;Hello world!&quot;;<br />  }<br />}<br /><br />var webApi = Require&lt;WebApi&gt;();<br />var server = webApi.CreateServer(&quot;http://localhost:8080&quot;);<br />server.OpenAsync().Wait();<br /><br />Console.WriteLine(&quot;Listening...&quot;);<br />Console.ReadKey();<br />server.CloseAsync().Wait();<br />^Z<br />        1 file(s) copied.<br /><br />C:\temp\foo&gt;scriptcs start.csx<br />Found assembly reference: Newtonsoft.Json.dll<br />...snip...<br />Listening...</pre>
+
+<p>Pretty slick. Add in a little Live Reload-style action and we could have a very node-ish experience, all from the command line and from within your text editor of choice, except using C#. </p>
+
+<p>Note that this is all using the same CLR and .NET that you've already got, running at full speed. Only the compilation is handled differently to give this script-like feel.</p>
+
+<h3>Installing ScriptCS</h3>
+
+<p>The easiest way to install and use ScriptCS is to use <a href="http://www.Chocolatey.org">Chocolatey</a> (a system-wide NuGet-based application/component installer. &quot;Chocolatey NuGet,&quot; get it?) And yes, it's Chocolatey spelled incorrectly with an &quot;-ey.&quot;</p>
+
+<p>You can use Chocolatey to do things like &quot;cinst 7zip&quot; or &quot;cinst git&quot; but we'll be using it just to get ScriptCS set up. It's also easily removed if it freaks you out and it installs no services and won't change anything major up save your PATH.</p>
+
+<p>First paste this into a cmd.exe prompt:</p>
+
+<pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command &quot;iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))&quot; &amp;&amp; SET PATH=%PATH%;%systemdrive%\chocolatey\bin</pre>
+
+<p>This will PowerShell, run <a href="https://chocolatey.org/install.ps1">https://chocolatey.org/install.ps1</a> and add Chocolatey to your path.</p>
+
+<p>Then, run </p>
+
+<pre>cinst ScriptCS</pre>
+
+<p>Which will put ScriptCS in a path like C:\Chocolatey\lib\ScriptCs.0.0.0 while Chocolatey makes it available in your PATH.</p>
+
+<h3>Sublime Text or Visual Studio</h3>
+
+<p>You can get syntax highlighting for your CSX files inside of Sublime Text 2 with the &quot;ScriptCS&quot; package you can install from package control. If you're using Visual Studio you can get the <a href="http://msdn.microsoft.com/en-us/vstudio/roslyn.aspx">Roslyn CTP</a> to turn on CSX syntax highlighting.</p>
+
+<p><img title="You can use PackageControl in SublimeText2 and install the ScriptCS package" style="display: inline" alt="You can use PackageControl in SublimeText2 and install the ScriptCS package" src="http://www.hanselman.com/blog/content/binary/Windows-Live-Writer/NuGet-Package-of-the-Week-14---ScriptCS_C1A6/image_6.png" width="401" height="192" /></p>
+
+<p>You can even debug your running ScriptCS projects by opening the ScriptCS.exe as a project. (Did you know you can open an EXE as a project?) Add the .csx script to the command line via Project Properties, drag in the scripts you're working on and debug away. </p>
+
+<p>Debugging requires the Roslyn SDK, although personally, I've been doing just fine with scripts at the command line which requires nothing more than the basic install and a text editor.</p>
+
+<p>It's not clear where ScriptCS is going, but it'll be interesting to see! Go get involved at <a href="http://scriptcs.net">scriptcs.net</a>. This kind of stuff gets me excited about the prospect of a compiler as a service, and also cements my appreciation of C# as my enabling language of choice. Between C# and JavaScript, you can really get a lot done, pretty much anywhere.</p>
+
+<p>I'll have a <a href="http://tekpub.com/search?q=hanselman">video walkthrough on how this works as I explain it to Rob Conery up on <strong>TekPub</strong> soon</a>! (Here's a <a href="http://go.referralcandy.com/share/FS4NCXF">referral coupon for <strong>20% off </strong>of Tekpub</a>!)</p>
+
+<p>What do you think?</p>
+
+<div class="item-prevnext">
+    <a href="http://www.hanselman.com/blog/ExposedABlogCommentSpammersSourceTemplate.aspx">&laquo;&nbsp;Exposed: A Blog Comment Spammer's Source...</a> | <a href="http://www.hanselman.com/blog/default.aspx" rel="home">Blog Home</a> | <a href="http://www.hanselman.com/blog/PennyPinchingInTheCloudHowToRunATwoDayVirtualConferenceFor10.aspx">Penny Pinching in the Cloud: How to run ...&nbsp;&raquo;</a>
+</div>
+  
+		
+<div class="about-scott">
+	<div class="bioBox">
+	    <h4>About Scott</h4>
+        <div class="bioBoxInner">
+			<p>Scott Hanselman is a former professor, former Chief Architect in finance, now speaker, consultant, father, diabetic, and Microsoft employee. He is a failed stand-up comic, a cornrower, and a book author.</p>
+            <a href="http://facebook.com/scott.hanselman" class="sm-link"><img src="/images/icon-fb.png" alt="facebook"></a>
+            <a href="http://twitter.com/shanselman" class="sm-link"><img src="/images/icon-twitter.png" alt="twitter"></a>
+            <a href="http://plus.google.com/108573066018819777334?rel=author" class="sm-link" rel="author"><img src="/images/icon-gplus.png" alt="g+"></a>
+            <a href="http://feeds.hanselman.com/ScottHanselman" class="sm-link"><img src="/images/icon-rss.png" alt="subscribe"></a><br/>
+            <a href="http://hanselman.com/about">About</a> &nbsp; <a href="http://www.hanselman.com/newsletter">Newsletter</a>
+        </div>
+	</div> 
+    
+      <div class="ads-box">
+          <div class="ad-item ">
+              <strong>Sponsored By</strong><br />
+                  <div id="lqdmad">
+                    <div data-type="ad" class="lqm_ad" data-publisher="lqm.scotthanselman.site" data-zone="ron" data-format="125x125" data-tags="Mobile%2CHTML5%2CCSS%2CWeb%2CJavascript%2CAgile%2CCloud%2CHosting%2Cvs%2CASP.NET%2CWP7%2CWPF%2CXML%2CParallelism%2CEntity%20Framework%2CjQuery%2CMVC%2CAJAX"></div> 
+                  </div>
+         </div>
+         <div class="ad-item">
+              <strong>Hosting By</strong><br />
+                <a rel="nofollow" href="http://www.orcsweb.com"><img alt="Dedicated Windows Server Hosting by ORCS Web" class="ad" border="0" valign="top" vspace="4" width="125" height="125" src="http://www.orcsweb.com/images/Hanselman250x250.jpg" /></a>
+          </div>        
+
+     </div>
+</div>
+  
+  <div class="item-ads">
+    <div class="lqm_ad" lqm_tags="Mobile%2CHTML5%2CCSS%2CWeb%2CJavascript%2CAgile%2CCloud%2CHosting%2Cvs%2CASP.NET%2CWP7%2CWPF%2CXML%2CParallelism%2CEntity%20Framework%2CjQuery%2CMVC%2CAJAX" lqm_publisher="lqm.scotthanselman.site" lqm_zone="RON" lqm_format="728x90"    ></div>
+  </div>
+		
+
+		<div data-src="http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx" class="OUTBRAIN item-ads" ></div>
+<script type="text/javascript">(function(){window.OB_platformType=8;window.OB_langJS="http://widgets.outbrain.com/lang_en.js";window.OBITm="1370325657162";window.OB_recMode="brn_strip";var ob=document.createElement("script");ob.type="text/javascript";ob.async=true;ob.src="http"+("https:"===document.location.protocol?"s":"")+"://widgets.outbrain.com/outbrainLT.js";var h=document.getElementsByTagName("script")[0];h.parentNode.insertBefore(ob,h);})();</script>
+
+		<div class="item-footer">
+   	      <a class="commentLinkStyle" href="http://www.hanselman.com/blog/CommentView.aspx?guid=4ef0981c-b836-4b4e-b7ed-95f4118cccb6#commentstart">Comments [31]</a>
+        <div class="item-footer-tools">
+        
+        
+          Share on: <a href="http://twitter.com/intent/tweet?url=http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx&text=Project-less scripted C# with ScriptCS and Roslyn - Scott Hanselman&via=shanselman">Twitter</a>, <a href="http://facebook.com/sharer.php?u=http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx">Facebook</a>, <a href="https://plus.google.com/share?url=http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx">Google+</a> or use the 
+        
+          <a href="http://www.hanselman.com/blog/ProjectlessScriptedCWithScriptCSAndRoslyn.aspx" class="permalink" rel="bookmark">Permalink</a>
+        </div>    
+    </div>
+		
+		
+		
+		
+  </section>
+</section>
+</article>
+<div id="endOfPost" ></div><a name="commentstart"></a><div class="commentBoxStyle"><div class="commentDateStyle"><a name="a56592d9-8095-4b39-ae2e-1b26fc9c7dc3"></a>24 April 2013 22:32:23 UTC</div><div class="commentBodyStyle">Pretty cool... It's good to see how other people use Roslyn. I've been looking at adding intellisense to an re-hosted workflow foundation designer using Roslyn. I wonder when Roslyn will be released.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=90ff7f487d8a638f135e461ef88bcffb&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Stephen Hardie</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="deee9225-8439-4a82-bdbe-5930c20df2ca"></a>24 April 2013 23:59:21 UTC</div><div class="commentBodyStyle">Using ScriptCS with Azure Mobile Services would be great.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=71a90757f539cd614635bdb151791fe1&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Romoku</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="bd6028f6-0a75-4bf0-9fec-705cd0ccffef"></a>25 April 2013 01:53:35 UTC</div><div class="commentBodyStyle">so i have a function in powershell that will compile me a C# expression and run it returning the objects to powershell and use it a fair bit. i've been meaning to round it out.<br />here are some examples<br /><br />#test code<br />c &quot;new{a=1,b=2,c=3}&quot;<br />c &quot;new{a=1,b=2,c=3}&quot;<br />(c DateTime.Now).adddays(5)<br />(c &quot;new{a=1,b=2,c=3}&quot;).b<br />c 'from x in Directory.GetFiles(@&quot;c:\downloads&quot;) where x.Contains(&quot;win&quot;) select x'<br /><br />and here is the code.<br /><br />$mytypes = @()<br />function run-csharpexpression([string] $expression )<br />{<br />$global:ccounter = [int]$ccounter + 1<br />$local:name  =  [system.guid]::NewGuid().tostring().replace('-','_').insert(0,&quot;csharpexpr&quot;)<br />$local:ns = &quot;ShellTools.DynamicCSharpExpression.N${ccounter}&quot;<br /><br />$local:template = @&quot;<br />using System;<br />using System.IO;<br />using System.Collections.Generic;<br />using System.Linq;<br /><br />namespace $ns<br />{<br />public static class Runner<br />{<br />public static object RunExpression()<br />{<br />return [[EXPRESSION]];<br />}<br />}<br />}<br />&quot;@<br /><br />$local:source = $local:template.replace(&quot;[[EXPRESSION]]&quot;,$expression)<br />#saving to a temporary file so that the error with anonymous types with the same signature doesn't happen<br />$local:filename = [System.IO.Path]::GetTempFileName()<br />$null = add-Type $local:source -Language CsharpVersion3 -outputassembly $local:filename <br />$null = [System.Reflection.Assembly]::LoadFile($local:filename )<br />invoke-Expression ('[' + $local:ns + '.Runner]::RunExpression()')<br />}<br /><br />set-alias c run-csharpexpression<br /><br /></div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=0c24c5a5672f219ea05cfec1573b2aa2&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://www.karlprosser.com">karl prosser</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="efc25561-8a02-4700-aa3b-f10f6ae0edd6"></a>25 April 2013 08:54:35 UTC</div><div class="commentBodyStyle">Hi Scott,<br /><br />just wanted to let you (and the readers) know about a similar project <a href="http://www.csscript.net" title="">CS-Script</a>, in my opinion more advanced and very stable (used in production since the .net 2.0).<br /><br />Not only it's the scripting engine, it enables duck typing, dynamic code generation (without using the C# CodeDOM) and lot's more (excellent help included).<br /><br />There are also plugins for different versions of Visual Studio, so imagine scripting with combination of C# and Reshaper, it is simply unmatched experience (Intellisense, debugging, everything works).<br /><br />This is the main reason why I allowed myself to skip entirely the PowerShell train for now, because PowerShell tooling and experience is still in it's infancy, at least compared to VS + R# combo.<br /><br />Disclaimer: no connection whatsoever with the author of the project, just one extremely happy user.<br /><br />Regards,<br />Alex</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=f3b38940de57db9f85afb390ff0823ac&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Alex</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="c39980f9-3977-4b0a-a9f3-0d26d24dad67"></a>25 April 2013 09:06:55 UTC</div><div class="commentBodyStyle">Awesome article Scott, great to hear people talking about ScriptCs. Glenn &amp; crew should be proud :)</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=ea85d137278101b428c0c3065136238c&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Ian</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="5a41b344-085f-4f8a-ac4b-314519e3800a"></a>25 April 2013 12:27:09 UTC</div><div class="commentBodyStyle">I look forward to your video.  I ran the powershell to install chocolatey, but when I typed cinst ScriptCS I got a screen full of errors :(</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=24ed59d38cf8d9aa86f27b39142ea916&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Koz</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="e596cc8a-dd1a-453c-86ef-371945a6c788"></a>25 April 2013 13:11:11 UTC</div><div class="commentBodyStyle">The IF is a similar project with a wcf service &amp; clickonce app that gives you intellisense   and the ability to compile and run custom modules: <a href="http://blog.xsolon.net/instructions/index.html">Instruction Framework</a><br /><br />Looking forward to the release of Roslyn.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=ba6a5b05d91b98bdfbb52c3dcd90917e&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://instructions.codeplex.com">xSolon</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="b62ada89-a27a-48fa-ab48-c33bf17a6e2b"></a>25 April 2013 14:13:56 UTC</div><div class="commentBodyStyle">I also tried to run the command to install ScriptCS using Chocolatey and got an error saying &quot;The term '\ChocolateyInstall\nuget' is not recognized as the name of a cmdlet, function, script file, or operable program.&quot;</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=7c394d9f65ce2c29a6b6669307ca11bf&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Yarx</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="24e052ff-4db6-4fa4-a1a0-e5daf72bd376"></a>25 April 2013 14:47:44 UTC</div><div class="commentBodyStyle">This is awesome.  It only took a couple of minutes to install and set up and now I'm testing C# RegExs at the command line!<br /><br />This totally rocks. Well done to Glenn and the other guys who did this.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=92b4f617dea2300cc2e3a6cc5740f5a8&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://mysoftwarenotes.wordpress.com/">Grahame SD</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="3d40c3df-8dda-48ee-a527-936724d762f2"></a>25 April 2013 15:01:50 UTC</div><div class="commentBodyStyle">Tried this out also received the error others are talking about.<br /><br />Write-Error : scriptcs did not finish successfully. Boo to the chocolatey gods!<br />-----------------------<br />[ERROR] The term '\ChocolateyInstall\nuget' is not recognized as the name of a<br />cmdlet, function, script file, or operable program. Check the spelling of the n<br />ame, or if a path was included, verify that the path is correct and try again.<br />-----------------------<br />At C:\Chocolatey\chocolateyinstall\helpers\functions\Write-ChocolateyFailure.ps<br />1:29 char:2</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=1b0e72f6efc6573bf7e130a757797b84&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://andrewherrick.com">Andrew Herrick</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="a10d3077-ba99-4780-b4f4-a6c9c75d9a4d"></a>25 April 2013 15:03:42 UTC</div><div class="commentBodyStyle">Actually closing and reopening command prompt did the trick!<br /><br />I just had to ensure I did a -force command so it re-installed all the goodness. :) Thanks Hansleman!</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=1b0e72f6efc6573bf7e130a757797b84&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://andrewherrick.com">Andrew Herrick</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="5bc62377-aa84-46af-9b2e-ae1986c67c9d"></a>25 April 2013 15:36:56 UTC</div><div class="commentBodyStyle">Geez, even taking screen shots with an UNREGISTERED version :(</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=9bf3ccd1cf9b015cfb86d947f09aa77d&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Scott</span></div></div><div class="commentBoxStyle commentBoxAuthorStyle"><div class="commentDateStyle"><a name="c2f0636c-c8c6-4177-9877-235ab3a8900d"></a>25 April 2013 16:52:51 UTC</div><div class="commentBodyStyle commentBodyAuthorStyle">Scott - Ya I need to pay. ;)</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=719c91f5c3013e43ee46ed2bdc67f883&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://www.hanselman.com">Scott Hanselman</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="780f80c8-8624-44ae-8ae7-5c15d2c5c196"></a>25 April 2013 18:22:03 UTC</div><div class="commentBodyStyle">@Yarx were you running as admin when you ran the script?<br /><br />Others who are having errors, close your shell and reopen after installing chocolatey.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=d372d9c0ab35dbe84c6d0a6902ae0594&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Glenn Block</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="8ecc6e04-0412-4f5d-b474-94759c2c0754"></a>25 April 2013 18:28:57 UTC</div><div class="commentBodyStyle">Regarding the powershell one-liner for installing Chocalatey: wow, scary. Let's forget everything we've learned about MITM and website compromises. Let's discard all immediate protection of https and all the ongoing protection of Authenticode and tell folks to blindly execute whatever code is pulled over an unencrypted, unauthenticated http request.<br /><br />The code samples are great, thanks, but maybe next time you could pay a little more attention to safe computing practices, even if that means less content that reads like the &quot;curl&quot; one-liners that are so trendy today?</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=cb5546f7704ffe824b11a618d38f80f1&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Peter</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="6c45c920-e119-4e6b-9cd3-e53c15408410"></a>25 April 2013 19:03:20 UTC</div><div class="commentBodyStyle">Am I missing something, or is it really true that there's zero encryption in Chocolatey's package system -- neither transport crypto like https nor package signing like Authenticode (or the Debian dpkg/apt-get system they cite as an inspiration)?<br /><br />I guess that explains the unsafe powershell one-liner: if there's no use of modern crypto for cinst and the rest after you install Chocolatey, what difference does it make if the initial installation is untrustworthy? <br /><br />Worse yet, their public roadmap and Google groups search results suggest that the folks behind Chocolatey aren't even *talking* about adding any kind of encrypted authentication to the package/repo scheme. <br /><br />Looks like the kind of stuff you'd want to avoid on systems that mattered -- very unlike apt-get. </div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=cb5546f7704ffe824b11a618d38f80f1&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Peter</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="75328dd3-effd-4584-b108-79627059f3b3"></a>25 April 2013 19:22:54 UTC</div><div class="commentBodyStyle">Peter - I don't think we have an issue flipping to SSL.<br /><br />The rest however is going to require some major changes. We built chocolatey on top of NuGet's infrastructure. Quite a few of the arguments you are making here are completely valid and go towards our choice of infrastructure. Perhaps we should look to customizing or using a different packaging framework.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=33a97150e4280a56c137fbfd763eb03d&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://ferventcoder.com">Rob</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="a9ddc26d-965b-4ad7-a13c-a9f2288b4246"></a>25 April 2013 21:28:28 UTC</div><div class="commentBodyStyle">Peter and all - change the feed to https://chocolatey.org/api/v2/ and you have SSL - we'll introduce this change in the next version of chocolatey and then break support for transferring packages without.<br /><br />Also, I've applied SSL changes to the site so that one liner install is pointing to HTTPS.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=33a97150e4280a56c137fbfd763eb03d&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://ferventcoder.com">Rob</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="5adbf0db-0e8c-4abd-853a-2ca00ff22f02"></a>26 April 2013 16:36:02 UTC</div><div class="commentBodyStyle">Was hoping someone would mention the <a href="http://mono-project.com/CsharpRepl">Mono C# REPL</a>, first released in 2008.<br /><br /></div><div class="commentBoxFooterStyle"><span class="commentPermalinkStyle">Jed</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="5e09691c-f74d-44ef-aa3f-d932faf482d4"></a>26 April 2013 20:00:37 UTC</div><div class="commentBodyStyle">Also keep in mind that there's already a .NET language with a great scripting experience: F#.  It has been part of Visual Studio since 2010, and is now supported in Xamarin Studio, too.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=3807b278b4615e7eb19dcacc927f77e2&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Keith</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="2067f3ab-4bd4-44f3-ac71-21021f2ff139"></a>26 April 2013 22:19:20 UTC</div><div class="commentBodyStyle">Keith.<br /><br />Scriptcs is not trying to replace F#, however F# requires one to learn a new language. Scriptcs is offering a light option that allows a developer to use their existing C# skills to write scripts.<br /></div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=d372d9c0ab35dbe84c6d0a6902ae0594&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Glenn Block</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="c7d66d8d-1b1e-43ee-beaf-daed63c3f834"></a>26 April 2013 22:19:58 UTC</div><div class="commentBodyStyle">Jed, there is work underway to port the Scriptcs engine to support Mono which uses the Mono.cs engine.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=d372d9c0ab35dbe84c6d0a6902ae0594&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Glenn Block</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="54dca121-f134-47be-8d1e-31d192e38dbc"></a>09 May 2013 09:16:32 UTC</div><div class="commentBodyStyle">@Alex: Thanks for highlighting <a href="http://www.csscript.net/">CS-Script</a><br /><br />For an open-source .NET project that I never heard of, it's pretty well-formed. The site is a bit old-school, but the documentation is good.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=c84c99baae62d7c12c570f27de6a781b&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Andrew Corkery</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="db515eeb-354e-4b24-8c3e-e731da7929db"></a>29 May 2013 22:42:57 UTC</div><div class="commentBodyStyle">Scott - yet another blog stealing your content here: http://google-chrome-browser.com/project-less-scripted-c-scriptcs-and-roslyn</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=295fad2575fda0d2f184dffd49c90070&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Jeff Schumacher</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="c12e8da1-8415-4df4-9133-823ad8063d30"></a>14 June 2013 01:06:43 UTC</div><div class="commentBodyStyle">I too got errors trying to run the examples. For both the nancy and the webapi example, when I run the 'script -install' command, when it gets to 'INFO: Copying assemblies to bin folder..' I get exceptions. <br /><br />For the Nancy one I got an ArgumentException 'The path is not of a legal form' at System.IO.Path.NormalizePath(..) , <br /><br />For the webapi I got a FileNotFoundException 'could not find file 'bla bla\ScriptCs.WebApi'</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=fdef0eb446c96d25fea776425adbc73a&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Chris Lee</span></div></div><div class="commentBoxStyle commentBoxAuthorStyle"><div class="commentDateStyle"><a name="e1ebb851-dddc-495e-bf53-59293f7f91f0"></a>16 June 2013 00:35:46 UTC</div><div class="commentBodyStyle commentBodyAuthorStyle">Chris - Did you ask in the Issues section of their GitHub Site?</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=719c91f5c3013e43ee46ed2bdc67f883&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://www.hanselman.com">Scott Hanselman</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="05023211-942f-490e-9a0b-f5f755d26ae2"></a>17 June 2013 02:23:04 UTC</div><div class="commentBodyStyle">Did a chocolatey update and tried the nancy scriptcs install again and it worked.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=fdef0eb446c96d25fea776425adbc73a&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Chris Lee</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="a5d1d0a2-aea0-43c0-a678-12129f04bd1f"></a>20 August 2013 16:23:24 UTC</div><div class="commentBodyStyle">great! I want learn more about this, i'm learning about C# and I'm interested in how to use C# as a scripting language</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=97117463fd1f51f9e93fd4719858e6fd&rating=PG&size=110&default=identicon"/></span><a class="commentPermalinkStyle" rel="nofollow" href="http://gferreirafotografias.wordpress.com">Gustavo Ferreira</a></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="1782360c-4414-49df-8283-fd3d7c22662d"></a>29 August 2013 17:05:12 UTC</div><div class="commentBodyStyle">Scott - yet another blog stealing your content here: http://google-chrome-browser.com/project-less-scripted-c-scriptcs-and-roslyn</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=48c0395792daa66d882f6138bda82aef&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">wm Bekh</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="4b6de912-827c-49e4-8086-01afb78aeff0"></a>20 September 2013 15:08:44 UTC</div><div class="commentBodyStyle">Peter, nobody is forcing you to install Chocolatey. Chocolatey is a NuGet wrapper and you use it at your discretion. If you have fundamental issues with encryption for installation packages over the web, maybe the web is not for you at the moment.</div><div class="commentBoxFooterStyle"><span class="commentGravatarBlock"><img class="commentGravatar" src="http://www.gravatar.com/avatar.php?gravatar_id=1ec6fb3e092f69c9f3ee34a338d9bbc7&rating=PG&size=110&default=identicon"/></span><span class="commentPermalinkStyle">Richard</span></div></div><div class="commentBoxStyle"><div class="commentDateStyle"><a name="3ec688af-3de0-4eb6-8b82-63bf4ecadc7d"></a>25 November 2013 20:12:05 UTC</div><div class="commentBodyStyle">After using both, I have to say I prefer cs-script over scriptcs.  It's pretty mature and has lots of cool options, like compiling the script to EXE from an explorer context menu, console or Windows execution, and using a caching pre-compiler.  It also supports XP and Server 2003 (I know, I know) that have .NET 4.0 x86 limitations.  </div><div class="commentBoxFooterStyle"><span class="commentPermalinkStyle">Bryan</span></div></div></div>
+    <div id="commentViewEntry" class="commentViewBoxStyle">
+        <span id="ctl01_commentsClosed" style="text-align: center">
+            <span id="ctl01_labelCommentsClosed" class="commentViewLabelStyle">Comments are closed.</span>
+        </span>
+        
+        
+    </div>
+</div>
+
+</main>
+<section class="containerOuter blogBodyContainer">
+ <section class="containerInner blogBody">
+				<div id="paging">
+						<div class="paging-prev">
+							
+						</div>
+						<div class="paging-next">
+							
+						</div>
+						
+				</div>
+    </section>
+</section>
+
+
+<section class="containerOuter line-tan" id="disclaimer">
+	<section class="containerInner">
+		<p>Disclaimer: The opinions expressed herein are my own personal opinions and do not represent my employer's view in any way.</p>
+
+    </section>
+</section>
+
+
+
+<footer class="containerOuter line-darkbrown">
+	<section class="containerInner">
+        
+        <div class="footer-container">
+        	<h3>Blog</h3>
+            <ul>
+            	<li><a href="//www.hanselman.com">Latest</a></li>
+                <li><a href="//www.hanselman.com/blog/GreatestHits.aspx">Greatest Hits</a></li>
+                <li><a href="//www.hanselman.com/tools">Dev Tool List</a></li>                
+            </ul>
+        </div>
+        
+        <div class="footer-container">
+        	<h3>Podcast</h3>
+            <ul>
+            	<li><a href="http://hanselminutes.com">Hanselminutes</a></li>
+                <li><a href="http://thisdeveloperslife.com">This Developer's Life</a></li>
+                <li><a href="http://ratchetandthegeek.com">Ratchet & The Geek</a></li>                
+            </ul>
+        </div>
+        
+        <div class="footer-container">
+        	<h3>Speaking</h3>
+            <ul>
+            	<li><a href="//www.hanselman.com/blog/CategoryView.aspx?category=Speaking">Speaking/Videos</a></li>
+                <li><a href="http://www.speakinghacks.com">Presentations Tips</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-container">
+        	<h3>Books</h3>
+            <ul>
+            	<li><a href="https://www.amazon.com/gp/product/1118311825/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=1118311825&linkCode=as2&tag=diabeticbooks">ASP.NET 4.5</a></li>
+                <li><a href="https://www.amazon.com/gp/product/111834846X/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=111834846X&linkCode=as2&tag=diabeticbooks">ASP.NET MVC 4</a></li>
+                <li><a href="http://relationshiphacks.com">Relationship Hacks</a></li>                
+            </ul>
+        </div> 
+    </section>
+	<div class="copyright">&copy; Copyright 2015, <a href="https://www.hanselman.com">Scott Hanselman</a>. Design by <a href="http://www.8164.org/">@jzy</a></div>        
+</footer>
+
+ <script language="javascript">
+    <!--
+    function escapeString(searchString)
+    {
+      var newString = escape(searchString);
+      return newString;
+    }
+
+    function doSearch(searchString)
+    {
+      if (searchString != "")
+      {
+        location.href='//www.hanselman.com/blog/googleresults.html?&sa=Search&domains=www.hanselman.com&sitesearch=www.hanselman.com&client=pub-7789616507550168&forid=1&ie=UTF-8&oe=UTF-8&safe=active&cof=GALT%3A%23B47B10%3BGL%3A1%3BDIV%3A%23A9501B%3BVLC%3A6F3C1B%3BAH%3Acenter%3BBGC%3AFFFFFF%3BLBGC%3A336699%3BALC%3AB47B10%3BLC%3AB47B10%3BT%3A000000%3BGFNT%3AA9501B%3BGIMP%3AA9501B%3BFORID%3A11&hl=en&q=' + escapeString(searchString);
+      }
+      return false;
+    }
+    -->
+  </script>
+          
+  <script src="//hanselman.com/blog/themes/JinYang/scripts/footer.v2.min.js"></script>
+        
+  <script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-130207-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+
+	<noscript><a href='https://www.omniture.com' title='Web Analytics'><img src='https://mssto.112.2o7.net/b/ss/msstoextblogsnojs/1/H.20.2--NS/0'  height='1' width='1' border='0' alt='' /></a></noscript>
+
+	<script type="text/javascript">
+		SyntaxHighlighter.config.bloggerMode = true;
+		SyntaxHighlighter.config.stripBrs = true;
+		SyntaxHighlighter.defaults['auto-links'] = false;
+		SyntaxHighlighter.all();
+		dp.SyntaxHighlighter.HighlightAll('code');
+	</script>
+
+
+<!-- lake quincy -->
+<script type='text/javascript'>
+    function _dmBootstrap(file) { 
+        var _dma = document.createElement('script');  
+        _dma.type = 'text/javascript'; 
+        _dma.async = true;  
+        _dma.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + file; 
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(_dma);
+    }
+    function _dmFollowup(file) { if (typeof DMAds === 'undefined')  _dmBootstrap('cdn2.DeveloperMedia.com/a.min.js');}
+    (function () { _dmBootstrap('cdn1.DeveloperMedia.com/a.min.js'); setTimeout(_dmFollowup, 2000);})();
+</script>
+        
+        
+  <!--  Place this tag after the last plusone tag -->
+	<script type="text/javascript">
+	  (function() {
+		var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		po.src = 'https://apis.google.com/js/plusone.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	  })();
+	</script>
+
+  <script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			$("section .blogBody a:[href$=.jpg],a[href$=.png],a[href$=.gif]").fancybox();
+		});
+	</script>
+
+<input type="hidden" name="OBKey" value="zbWJu9GRhQQRrmDBvuZY/A=="/> <script LANGUAGE="JavaScript">var OBCTm='1370325530403'; </script><script LANGUAGE="JavaScript" src="https://widgets.outbrain.com/claim.js"></script>
+
+</form></body>
+</html>
+

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "HtmlAgilityPack": "1.4.9",
+    "LambdaMicrobenchmarking": "0.1.1"
+  }
+}
